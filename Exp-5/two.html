@@ -1,0 +1,93 @@
+<html>
+    <head>
+        <title>
+            Form
+        </title>
+<style>
+
+.container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 70px;
+        border-radius: 5px;
+	
+	    }
+ label {
+        display: block;
+        margin-bottom: 5px;
+    }
+h2
+{
+padding-top:20px ;
+text-align:center;}
+
+table td,th{
+      padding:10px;
+      
+      color: black;
+    }
+    table
+	{
+      margin: auto;
+	background-color:skyblue;
+	width: calc(100% - 22px);
+        padding: 19px;        
+        border-radius: 10px ;
+        box-sizing: border-box;
+        font-size: 16px;
+
+    }
+
+</style>
+
+    </head>
+    <body>
+<div class="container">
+	<h2>REGISTRATION FORM</h2>
+
+        <form action="http://localhost:7000/login" method="post">
+	<table>
+	<tbody><tr>
+        <th>NAME</th>
+	<td><input type="text" name="username" value="" /></td><br/>
+         </tr>
+	<tr> 
+	  <th>ROLL NO </th>
+           <td><input type="text" name="id" value=""/></td><br/>
+         </tr> 
+	<tr>
+	 <th>BRANCH</th>
+	<td><select name="branch">
+            <option value="select">Select Branch</option>
+            <option value="IT">IT</option>
+            <option value="CSE">CSE</option>
+            <option value="AI">AI</option>
+            <option value="EEE">EEE</option>
+            <option value="ECE">ECE</option>
+            </select><br/>
+           </td>
+	</tr>
+	<tr>
+	<th>GENDER</th>
+          <td>  <label for="gender"></label></br>
+            <input type="radio" name="gender" value="female"/> Female<br/>
+            <input type="radio" name="gender" value="male"/>Male</br>
+	    <input type="radio" name="gender" value="other"/>Other</br>
+          </td>
+	</tr>
+	 <tr>
+           <th> MOBILE NO</th>
+	<td> <input type="number" name="phno" value=""/><br/></td>
+          </tr> 
+	<tr>
+          <th>  ADDRESS </th>
+	<td><input type="text" name="branchadd" value=""/><br/>
+         </td>
+	</tr>
+  
+         <th>   <input type="submit" name="login" value="login" style="padding: 12px;width: 60%;"/>
+	</th>
+        </form>
+</div>
+    </body>
+</html>
