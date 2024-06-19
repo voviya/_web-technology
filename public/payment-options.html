@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #82f7d2;
+        }
+
+        #orderDetails {
+            background-color: #fff;
+            padding: 10px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(235, 23, 23, 0.1);
+            max-width: 400px;
+            text-align:center;
+            text-shadow: #6bdbf4; 
+        }
+        .order  { padding: 1rem;
+    margin: 1rem 0;
+    font-size: 1rem;
+    color: #333;
+    text-transform: none;
+    border: .1rem solid rgba(0, 0, 0, .3);
+    border-radius: .5rem;
+    width: 100%; 
+       }
+        h1 {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .payment-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .payment-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .bank-details {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            #orderDetails {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .payment-buttons {
+                flex-direction:row;
+               
+            }
+        }
+    </style>
+    
+    <script type="text/javascript">
+        function displayOrderDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            const phone = urlParams.get('phone');
+            const food = urlParams.get('food');
+
+            document.getElementById("orderDetails").innerHTML = `
+                <h2>Order Details</h2>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Food:</strong> ${food}</p>
+            `;
+        }
+
+       
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("creditCardDetails").style.display = "none";
+            document.getElementById("digitalWalletsDetails").style.display = "none";
+            document.getElementById("netBankingDetails").style.display = "none";
+            document.getElementById("cashOnDeliveryDetails").style.display = "none";
+            document.getElementById("upiDetails").style.display = "none";
+            document.getElementById("mobileBankingAppsDetails").style.display = "none";
+
+            document.getElementById("paymentForm").addEventListener("change", function() {
+                const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+                document.getElementById("creditCardDetails").style.display = "none";
+                document.getElementById("digitalWalletsDetails").style.display = "none";
+                document.getElementById("netBankingDetails").style.display = "none";
+                document.getElementById("cashOnDeliveryDetails").style.display = "none";
+                document.getElementById("upiDetails").style.display = "none";
+                document.getElementById("mobileBankingAppsDetails").style.display = "none";
+
+                if (selectedPaymentMethod === "creditDebitCard") {
+                    document.getElementById("creditCardDetails").style.display = "block";
+                } else if (selectedPaymentMethod === "digitalWallets") {
+                    document.getElementById("digitalWalletsDetails").style.display = "block";
+                } else if (selectedPaymentMethod === "netBanking") {
+                    document.getElementById("netBankingDetails").style.display = "block";
+                } else if (selectedPaymentMethod === "cashOnDelivery") {
+                    document.getElementById("cashOnDeliveryDetails").style.display = "block";
+                } else if (selectedPaymentMethod === "upi") {
+                    document.getElementById("upiDetails").style.display = "block";
+                } else if (selectedPaymentMethod === "mobileBankingApps") {
+                    document.getElementById("mobileBankingAppsDetails").style.display = "block";
+                }
+            });
+        });
+        window.onload = function() {
+            displayOrderDetails();
+        }
+
+
+        function handlePaymentFormSubmit(event) {
+            event.preventDefault();
+            // Assuming here you would validate the payment details and then call handlePaymentCompletion()
+            handlePaymentCompletion();
+        }
+
+       
+        function handlePaymentCompletion() {
+            alert("Payment Completed! Thank you for your purchase.");
+            window.location.href = "index.html";
+        }
+
+        
+        function submitPayment() {
+            const paymentForm = document.getElementById('paymentForm');
+            const formData = new FormData(paymentForm);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('/payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageElement = document.getElementById('message');
+                messageElement.innerText = data.message;
+                const paymentDetailsElement = document.getElementById('paymentDetails');
+                paymentDetailsElement.innerText = JSON.stringify(data.paymentDetails, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+    </script>
+</head>
+<body>
+    
+    <div id="orderDetails" class="order"></div>
+    <h1>Payment Options</h1>
+    <form id="paymentForm" onsubmit="event.preventDefault(); submitPayment();">
+        <label>
+            <input type="radio" name="paymentMethod" value="creditDebitCard" required> Credit/Debit Card
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="digitalWallets" required> Digital Wallets
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="netBanking" required> Net Banking
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="cashOnDelivery" required> Cash-on-Delivery (COD)
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="upi" required> UPI (Unified Payments Interface)
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="mobileBankingApps" required> Mobile Banking Apps
+        </label>
+    </form>
+
+
+    <div id="creditCardDetails" class="bank-details">
+        <h2>Credit/Debit Card Details</h2>
+        <label>Card Number: <input type="text" id="cardNumber" required></label>
+        <label>Expiry Date: <input type="text" id="expiryDate" required></label>
+        <label>CVV: <input type="text" id="cvv" required></label>
+    </div>
+
+    <div id="digitalWalletsDetails" class="bank-details">
+        <h2>Digital Wallet Details</h2>
+        <label>Email: <input type="text" id="walletEmail" required></label>
+    </div>
+
+    <div id="netBankingDetails" class="bank-details">
+        <h2>Net Banking Details</h2>
+        <label>Bank Name: <input type="text" id="netBankingBankName" required></label>
+    </div>
+
+    <div id="cashOnDeliveryDetails" class="bank-details">
+        <h2>Cash-on-Delivery (COD) Details</h2>
+        <p>No additional details required for COD.</p>
+    </div>
+
+    <div id="upiDetails" class="bank-details">
+        <h2>UPI Details</h2>
+        <label>UPI ID: <input type="text" id="upiId">
+            Payment App: 
+            <select id="paymentApp">
+                <option value="phonepe">PhonePe</option>
+                <option value="gpay">Google Pay</option>
+                <option value="paypal">PayPal</option>
+            </select>
+        </label>
+        <img id="upiQRCode"  alt="UPI QR Code" style="width:200px;height: 200px;" src="C:\Users\tvovi\Downloads\GooglePay_QR.png"/>
+    </div>
+
+    <div id="mobileBankingAppsDetails" class="bank-details">
+        <h2>Mobile Banking Apps Details</h2>
+        <label>App Name: <input type="text" id="appName" required></label>
+    </div>
+
+    <div class="payment-buttons" required>
+        <button onclick="handlePaymentCompletion()  ">Payment Completed</button>
+    </div>
+</body>
+<script>
+    // Simulating QR code generation for UPI
+    document.getElementById("upiDetails").querySelector("input[type='submit']").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent default form submission
+        // Simulate a QR code generation and display it
+        const upiQRCodeURL = "https://via.placeholder.com/150?text=UPI+QR+Code";
+        document.getElementById("upiQRCode").src = upiQRCodeURL;
+    });
+</script>
+</html>

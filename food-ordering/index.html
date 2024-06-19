@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering</title>
+</head>
+<body>
+    <h1>Food Ordering Website</h1>
+    <h2>Menu</h2>
+    <div id="menu"></div>
+    <h2>Place an Order</h2>
+    <form id="orderForm">
+        <label for="item">Item:</label>
+        <input type="text" id="item" name="item" required>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required>
+        <button type="submit">Order</button>
+    </form>
+    <div id="response"></div>
+    <script>
+        async function loadMenu() {
+            const response = await fetch('/menu');
+            const menu = await response.json();
+            const menuDiv = document.getElementById('menu');
+            menuDiv.innerHTML = menu.map(item => `<p>${item.name}: $${item.price}</p>`).join('');
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const item = document.getElementById('item').value;
+            const quantity = document.getElementById('quantity').value;
+            const response = await fetch('/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ item, quantity })
+            });
+            const result = await response.json();
+            document.getElementById('response').innerText = result.message;
+        });
+
+        loadMenu();
+    </script>
+</body>
+</html>
